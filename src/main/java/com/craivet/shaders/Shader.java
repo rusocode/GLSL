@@ -3,6 +3,8 @@ package com.craivet.shaders;
 import javax.swing.*;
 import java.io.*;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
@@ -112,6 +114,9 @@ public class Shader {
 
     private final int programID, fragmentShaderID;
 
+    private int resolutionUniformLocation;
+    private int timeUniformLocation;
+
     public Shader(String fragmentFile) {
         fragmentShaderID = loadShader(fragmentFile, GL_FRAGMENT_SHADER);
         // Crea un programa de shader
@@ -125,6 +130,12 @@ public class Shader {
          * entre los shaders en el programa y asegura que esten configurados de manera coherente para ejecutarse correctamente en
          * el hardware de la tarjeta grafica. */
         glValidateProgram(programID);
+        getAllUniformLocations();
+    }
+
+    public void getAllUniformLocations() {
+        resolutionUniformLocation = getUniformLocation("u_resolution");
+        timeUniformLocation = getUniformLocation("u_time");
     }
 
     /**
@@ -156,6 +167,40 @@ public class Shader {
          * o Fragment Shaders. Es crucial entender que glDeleteProgram() borra el programa de shader, pero no afecta a los shaders
          * individuales adjuntos. */
         glDeleteProgram(programID);
+    }
+
+    /**
+     * Carga las dimensiones de la resolucion en el vector uniforme del shader.
+     *
+     * @param w ancho de la resolucion.
+     * @param h alto de la resolucion.
+     */
+    public void loadResolution(int w, int h) {
+        glUniform2f(resolutionUniformLocation, w, h);
+    }
+
+    /**
+     * Carga el tiempo a la uniforme de tipo float.
+     *
+     * @param time tiempo desde que se ininicio la aplicacion.
+     */
+    public void loadTime(float time) {
+        glUniform1f(timeUniformLocation, time);
+    }
+
+    /**
+     * Obtiene la ubicacion de la variable uniforme declarada en el shader.
+     * <p>
+     * Estas variables permanecen constantes durante la ejecucion del shader y se emplean para enviar datos desde la aplicacion
+     * de OpenGL al shader. La funcion toma como parametros el identificador del programa de shader y el nombre de la variable
+     * uniforme deseada, devolviendo un entero que representa la posicion de la variable en el programa de shader. Esta
+     * posicion se utiliza despues para asignar valores a la variable uniforme mediante funciones como {@code  glUniform1f()}, {@code glUniformMatrix4fv()}, etc.
+     *
+     * @param name nombre de la variable uniforme.
+     * @return un entero que representa la ubicacion de la variable uniforme.
+     */
+    private int getUniformLocation(String name) {
+        return glGetUniformLocation(programID, name);
     }
 
     /**
