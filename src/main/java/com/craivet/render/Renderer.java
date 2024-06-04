@@ -3,8 +3,6 @@ package com.craivet.render;
 import com.craivet.RawModel;
 import com.craivet.shaders.Shader;
 
-import org.lwjgl.util.vector.Vector2f;
-
 import static com.craivet.render.DisplayManager.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -12,14 +10,13 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class Renderer {
 
-    private final RawModel quad;
     private final Shader shader;
-
-    private float time;
+    private final RawModel quad;
 
     private static final String FRAGMENT_FILE = "src/main/java/com/craivet/shaders/FragmentShader.glsl";
 
     public Renderer(Loader loader) {
+        shader = new Shader(FRAGMENT_FILE);
         // Define los vertices (en este caso, solo necesitamos 4 vertices para cubrir toda la pantalla)
         float[] vertices = {
                 -1.0f, -1.0f, // Vertice inferior izquierdo
@@ -28,15 +25,13 @@ public class Renderer {
                 -1.0f, 1.0f  // Vertice superior izquierdo
         };
         quad = loader.loadToVAO(vertices);
-        shader = new Shader(FRAGMENT_FILE);
     }
 
     public void render() {
         prepare();
         shader.start();
         shader.loadResolution(WIDTH, HEIGHT);
-        time = DisplayManager.getFrameTimeSeconds();
-        shader.loadTime(time);
+        shader.loadTime(DisplayManager.getFrameTimeSeconds());
         glBindVertexArray(quad.getVaoID()); // Vincula el objeto vao especificado por el id
         glEnableVertexAttribArray(0); // Habilita el atributo 0 que hace referencia a la posicion de los vertices ya que viene deshabilitado por defecto
         /* Renderiza el cuadrado que cubre toda la pantalla. Tecnicamente renderiza tres triangulos en forma de abanico utilizando

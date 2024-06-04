@@ -3,8 +3,6 @@ package com.craivet.shaders;
 import javax.swing.*;
 import java.io.*;
 
-import org.lwjgl.util.vector.Vector2f;
-
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
@@ -182,7 +180,7 @@ public class Shader {
     /**
      * Carga el tiempo a la uniforme de tipo float.
      *
-     * @param time tiempo desde que se ininicio la aplicacion.
+     * @param time tiempo desde que se inicio la aplicacion.
      */
     public void loadTime(float time) {
         glUniform1f(timeUniformLocation, time);
@@ -222,9 +220,15 @@ public class Shader {
             JOptionPane.showMessageDialog(null, "Error de I/O", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
+        // Devuelve un identificador unico para el objeto de shader creado
         int shaderID = glCreateShader(type);
+        // Carga el codigo fuente
         glShaderSource(shaderID, shaderSource);
+        // Compila el codigo fuente
         glCompileShader(shaderID);
+        /* Despues de compilar el shader, es recomendable verificar si hubo errores de compilacion utilizando glGetShaderiv() y
+         * glGetShaderInfoLog(). La informacion de registro (log) proporciona detalles sobre cualquier problema que haya surgido
+         * durante la compilacion del shader. */
         if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
             System.out.println(glGetShaderInfoLog(shaderID, 500));
             System.err.println("Could not compile shader!");
