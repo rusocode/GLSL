@@ -132,8 +132,8 @@ public class Shader {
     }
 
     public void getAllUniformLocations() {
-        resolutionUniformLocation = getUniformLocation("u_resolution");
-        timeUniformLocation = getUniformLocation("u_time");
+        resolutionUniformLocation = getUniformLocation("resolution");
+        timeUniformLocation = getUniformLocation("time");
     }
 
     /**

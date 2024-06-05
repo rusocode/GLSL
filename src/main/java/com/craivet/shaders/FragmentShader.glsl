@@ -1,40 +1,31 @@
 #version 400 core
 
-uniform vec2 u_resolution;
-uniform float u_time;
+#define PI 3.14159265359
 
-out vec4 out_Color; // Esta es una manera mas moderna y flexible de definir la salida de color en GLSL
+uniform vec2 resolution;
+uniform float time;
 
-float blinnWyvillCosineApproximation(float x) {
-    float x2 = x * x;
-    float x4 = x2 * x2;
-    float x6 = x4 * x2;
+out vec4 out_Color;
 
-    float fa = (4.0 / 9.0);
-    float fb = (17.0 / 9.0);
-    float fc = (22.0 / 9.0);
-
-    float y = fa * x6 - fb * x4 + fc * x2;
-    return y;
-}
-
-// Traza una linea en Y usando un valor entre 0,0 y 1,0
-float plot(vec2 st) {
-    return smoothstep(0.02, 0.0, abs(st.y - st.x));
+float diagonalSmooth(vec2 st, float y) {
+    return smoothstep(y - 0.01, y, st.y) - smoothstep(y, y + 0.01, st.y);
 }
 
 void main() {
-    vec2 st = gl_FragCoord.xy / u_resolution;
 
-    float y = st.x;
+    vec2 st = gl_FragCoord.xy / resolution;
 
-    vec3 color = vec3(y);
+    float sinuosityLevel = PI;
+    float speed = 2;
 
-    // Traza una linea y la almacena en pct
-    float pct = plot(st);
-    color = (1.0 - pct) * color + pct * vec3(0.0, 1.0, 0.0);
+    float y = sin(st.x * sinuosityLevel + (time * speed)) * 0.5 + 0.5;
+    float diagSmooth = diagonalSmooth(st, y);
+
+    vec3 gradient = vec3(y);
+    vec3 green = vec3(0.0, 1.0, 0.0);
+
+    vec3 color = ((1.0 - diagSmooth) * gradient) + (diagSmooth * green);
 
     out_Color = vec4(color, 1.0);
-}
 
-// gl_FragCoord: guarda la coordenada del pixel o screen fragment del thread actual
+}
