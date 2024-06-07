@@ -15,6 +15,8 @@ public class Renderer {
 
     private static final String FRAGMENT_FILE = "src/main/java/com/craivet/shaders/FragmentShader.glsl";
 
+    private float time;
+
     public Renderer(Loader loader) {
         shader = new Shader(FRAGMENT_FILE);
         // Define los vertices (en este caso, solo necesitamos 4 vertices para cubrir toda la pantalla)
@@ -31,7 +33,8 @@ public class Renderer {
         prepare();
         shader.start();
         shader.loadResolution(WIDTH, HEIGHT);
-        shader.loadTime(DisplayManager.getFrameTimeSeconds());
+        time += DisplayManager.getFrameTimeSeconds();
+        shader.loadTime(time);
         glBindVertexArray(quad.getVaoID()); // Vincula el objeto vao especificado por el id
         glEnableVertexAttribArray(0); // Habilita el atributo 0 que hace referencia a la posicion de los vertices ya que viene deshabilitado por defecto
         /* Renderiza el cuadrado que cubre toda la pantalla. Tecnicamente renderiza tres triangulos en forma de abanico utilizando

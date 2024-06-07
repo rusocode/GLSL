@@ -24,7 +24,7 @@ void main() {
     vec3 gradient = vec3(y);
     vec3 green = vec3(0.0, 1.0, 0.0);
 
-    vec3 color = ((1.0 - diagSmooth) * gradient) + (diagSmooth * green);
+    vec3 color = /* ((1.0 - diagSmooth) * gradient) + */ (diagSmooth * green);
 
     out_Color = vec4(color, 1.0);
 
