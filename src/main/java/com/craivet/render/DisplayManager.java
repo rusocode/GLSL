@@ -6,10 +6,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.*;
 
-/**
- * Administra la visualizacion de la ventana.
- */
-
 public class DisplayManager {
 
     public static final int WIDTH = 800, HEIGHT = 600;
@@ -40,7 +36,6 @@ public class DisplayManager {
         Display.sync(FPS);
         Display.update();
         long currentFrameTime = getCurrentTime();
-        // Obtiene la diferencia de tiempo entre cada frame en segundos
         delta = (currentFrameTime - lastFrameTime) / 1000f;
         lastFrameTime = currentFrameTime;
     }
@@ -53,11 +48,6 @@ public class DisplayManager {
         return delta;
     }
 
-    /**
-     * Devuelve el tiempo actual del sistema en milisegundos.
-     *
-     * @return el tiempo actual del sistema en milisegundos.
-     */
     private static long getCurrentTime() {
         return Sys.getTime() * 1000 / Sys.getTimerResolution();
     }

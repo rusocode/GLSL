@@ -35,13 +35,13 @@ public class Renderer {
         shader.loadResolution(WIDTH, HEIGHT);
         time += DisplayManager.getFrameTimeSeconds();
         shader.loadTime(time);
-        glBindVertexArray(quad.getVaoID()); // Vincula el objeto vao especificado por el id
-        glEnableVertexAttribArray(0); // Habilita el atributo 0 que hace referencia a la posicion de los vertices ya que viene deshabilitado por defecto
+        glBindVertexArray(quad.getVaoID());
+        glEnableVertexAttribArray(0);
         /* Renderiza el cuadrado que cubre toda la pantalla. Tecnicamente renderiza tres triangulos en forma de abanico utilizando
          * los primeros cuatro vertices del buffer de vertices actual. */
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4); // TODO Reemplazar el numero magico 4 por la cantidad de vertices = vertices.length / dimensions
         glDisableVertexAttribArray(0); // Deshabilita el atributo 0
-        glBindVertexArray(0); // Desvincula el vao
+        glBindVertexArray(0);
         shader.stop();
     }
 
@@ -49,9 +49,6 @@ public class Renderer {
         shader.clean();
     }
 
-    /**
-     * Se llama una vez en cada fotograma y simplemente prepara a OpenGL para renderizar el siguiente frame.
-     */
     private void prepare() {
         glClearColor(0, 0, 0, 1); // Establece el color de limpieza a negro opaco
         /* Limpia el buffer de color utilizando el color establecido previamente con glClearColor() (si es que se especifico un
